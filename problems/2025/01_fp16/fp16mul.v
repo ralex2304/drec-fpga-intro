@@ -72,8 +72,11 @@ always @(*) begin
     end else if (&op1_e || &op2_e) begin // inf
         res_e = {ELEN{1'b1}};
         res_m = {MLEN{1'b0}};
+    end else if ({1'b0, op1_e} + {1'b0, op2_e} < {1'b0, BIAS}) begin
+        res_e = {ELEN{1'b0}};
+        res_m = {MLEN{1'b0}};
     end else if (&(~upd_e) && |round_m) begin
-        res_e = upd_e;
+        res_e = {ELEN{1'b0}};
         res_m = {MLEN{1'b0}};
     end else begin
         res_e = upd_e;
