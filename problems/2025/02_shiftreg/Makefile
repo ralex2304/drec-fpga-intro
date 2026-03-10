@@ -1,0 +1,15 @@
+TB_LIST := shiftreg.v
+
+RTL_LIST := shiftreg_tb.v
+
+sim: $(TB_LIST) $(RTL_LIST)
+	iverilog $^ -o sim
+	./sim
+
+waves: dump.vcd
+	gtkwave dump.vcd &
+
+clean:
+	rm -rf sim dump.vcd
+
+.PHONY: clean sim waves
