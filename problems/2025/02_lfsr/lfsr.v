@@ -10,9 +10,10 @@ module lfsr #(
 
 reg [WIDTH:0] xor_reg;
 
+integer i;
 always @(*) begin
     xor_reg[0] = 1'b0;
-    for (integer i = 0; i < WIDTH; i = i + 1) begin
+    for (i = 0; i < WIDTH; i = i + 1) begin
         if (CHARACTERISTIC[i]) begin
             xor_reg[i+1] = xor_reg[i] ^ o_out[i];
         end else begin
