@@ -60,7 +60,7 @@ always @(*) begin
     endcase
 end
 
-assign o_wb_en = (opcode != STORE);
+assign o_wb_en = (opcode != STORE) && (opcode != BRANCH);
 
 always @(*) begin
     o_alu_oper = {i_instr[30], funct3};
