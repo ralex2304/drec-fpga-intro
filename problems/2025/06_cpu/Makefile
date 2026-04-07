@@ -23,11 +23,11 @@ endif
 
 RTL_LIST += 		\
 	src/cpu_top.v	\
-	src/core.v		\
-	src/alu.v		\
+	src/cpu_core.v	\
+	src/cpu_alu.v	\
 	src/cmp.v		\
 	src/reg_file.v	\
-	src/control.v	\
+	src/ctrl_unit.v	\
 	src/imem.v		\
 	src/dmem.v		\
 	src/mem_xbar.v	\
