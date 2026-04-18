@@ -31,7 +31,7 @@ wire [31:0] dmem2xbar_data;
 imem imem(
     .clk        (clk            ),
     .rst_n      (rst_n          ),
-    .i_stall    (core2imem_stall),
+    .i_stall    (1'b0           ),
     .i_addr     (core2imem_addr ),
     .o_data     (imem2core_data )
 );
@@ -70,12 +70,11 @@ mem_xbar(
     .i_mmio_data   (i_mmio_data     )
 );
 
-core core(
+cpu_core core(
     .clk           (clk             ),
     .rst_n         (rst_n           ),
     .i_instr_data  (imem2core_data  ),
     .o_instr_addr  (core2imem_addr  ),
-    .o_instr_stall (core2imem_stall ),
     .o_mem_addr    (core2xbar_addr  ),
     .o_mem_data    (core2xbar_data  ),
     .o_mem_we      (core2xbar_wren  ),

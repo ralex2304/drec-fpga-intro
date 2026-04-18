@@ -39,7 +39,7 @@ end
 
 initial begin
     $dumpvars;
-    #15000 $finish;
+    #150000 $finish;
 end
 
 endmodule
