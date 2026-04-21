@@ -12,7 +12,6 @@ module cpu_top(
 );
 
 wire [29:0] core2imem_addr;
-wire        core2imem_stall;
 wire [31:0] imem2core_data;
 
 wire [29:0] core2xbar_addr;
@@ -31,15 +30,15 @@ wire [31:0] dmem2xbar_data;
 imem imem(
     .clk        (clk            ),
     .rst_n      (rst_n          ),
-    .i_stall    (core2imem_stall),
-    .i_addr     (core2imem_addr ),
+    .i_stall    (1'b0           ),
+    .i_addr     (core2imem_addr[7:0]),
     .o_data     (imem2core_data )
 );
 
 dmem dmem(
     .clk           (clk             ),
-    .i_addr        (xbar2dmem_addr  ),
-    .i_data        (xbar2dmem_data  ),
+    .i_addr        (xbar2dmem_addr[7:0]),
+    .i_data        (xbar2dmem_data),
     .i_we          (xbar2dmem_wren  ),
     .i_mask        (xbar2dmem_mask  ),
     .o_data        (dmem2xbar_data  )
@@ -70,12 +69,11 @@ mem_xbar(
     .i_mmio_data   (i_mmio_data     )
 );
 
-core core(
+cpu_core core(
     .clk           (clk             ),
     .rst_n         (rst_n           ),
     .i_instr_data  (imem2core_data  ),
     .o_instr_addr  (core2imem_addr  ),
-    .o_instr_stall (core2imem_stall ),
     .o_mem_addr    (core2xbar_addr  ),
     .o_mem_data    (core2xbar_data  ),
     .o_mem_we      (core2xbar_wren  ),
