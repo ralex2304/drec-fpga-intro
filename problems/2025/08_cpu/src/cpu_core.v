@@ -162,7 +162,7 @@ cmp #(
 
 lsu lsu (
     .clk       (clk),
-    .i_addr    (alu_res),
+    .i_addr    (op_sum),
     .i_data    (src1),
     .i_wr_en   (ctrl2lsu_wr_en),
     .i_funct3  (funct3),
