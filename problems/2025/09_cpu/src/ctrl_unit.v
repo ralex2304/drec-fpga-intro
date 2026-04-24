@@ -19,22 +19,22 @@ wire [6:0] opcode = i_instr[6:0];
 wire [2:0] funct3 = i_instr[14:12];
 
 /// MUX A
-localparam [1:0] IMM_U = 0;
-localparam [1:0] IMM_B = 1;
-localparam [1:0] IMM_J = 2;
-localparam [1:0] SRC_0 = 3;
+localparam [1:0] IMM_U = 2'b00;
+localparam [1:0] IMM_B = 2'b01;
+localparam [1:0] IMM_J = 2'b10;
+localparam [1:0] SRC_0 = 2'b11;
 
 /// MUX B
-localparam [1:0] PC    = 0;
-localparam [1:0] IMM_S = 1;
-localparam [1:0] IMM_I = 2;
-localparam [1:0] SRC_1 = 3;
+localparam [1:0] PC    = 2'b00;
+localparam [1:0] IMM_S = 2'b01;
+localparam [1:0] IMM_I = 2'b10;
+localparam [1:0] SRC_1 = 2'b11;
 
 /// MUX WB
 localparam [1:0] WB_PCINC = 0;
-localparam [1:0] WB_LSU   = 1;
-localparam [1:0] WB_ALU   = 2;
-localparam [1:0] WB_IMM_U = 3;
+localparam [1:0] WB_ALU   = 1;
+localparam [1:0] WB_IMM_U = 2;
+localparam [1:0] WB_LSU   = 3;
 
 /// Opcodes
 localparam [6:0] LOAD   = 7'b00000_11;

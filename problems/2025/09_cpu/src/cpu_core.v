@@ -36,6 +36,8 @@ wire [29:0] taken_pc_s1;
 
 wire [31:0] src0_s1, src1_s1;
 wire [31:0] dst_s2;
+wire [31:0] wb_dst_s1;
+reg  [31:0] wb_dst_s2;
 wire dst_en_s1;
 
 wire [4:0] rs0_s0 = i_instr_data[19:15];
@@ -54,9 +56,6 @@ wire [31:0] op_sum_s1 = alu_op_a_s1 + alu_op_b_s1;
 
 reg misspredict_s2;
 
-reg [31:0] imm_u_s2;
-reg [31:0] alu_res_s2;
-reg [29:0] pc_inc_s2;
 reg [1:0] wb_sel_s2;
 reg [4:0] rd_s2;
 reg dst_en_s2;
@@ -166,12 +165,10 @@ cpu_alu #(
 );
 
 always @(posedge clk) begin
-    imm_u_s2   <= imm_u_s1;
-    alu_res_s2 <= alu_res_s1;
-    pc_inc_s2  <= pc_inc_s1;
     wb_sel_s2  <= ctrl_wb_sel_s1;
     rd_s2      <= rd_s1;
     dst_en_s2  <= dst_en_s1;
+    wb_dst_s2  <= wb_dst_s1;
 end
 
 cmp #(
@@ -184,9 +181,11 @@ cmp #(
     .o_illegal()
 );
 
+wire [31:0] lsu_addr = src0_s1 + (ctrl_alu_sel2_s1[1] ? imm_i_s1 : imm_s_s1);
+
 lsu lsu (
     .clk       (clk),
-    .i_addr    (op_sum_s1),
+    .i_addr    (lsu_addr),
     .i_data    (src1_s1),
     .i_wr_en   (ctrl2lsu_wr_en_s1),
     .i_funct3  (funct3_s1),
@@ -201,9 +200,11 @@ lsu lsu (
 mux4 #(
     .DATA_WIDTH(32)
 ) mux4_wb (
-    .i_select(wb_sel_s2),
-    .i_data  ({imm_u_s2, alu_res_s2, lsu_res_s2, {pc_inc_s2, 2'b0}}),
-    .o_data  (dst_s2)
+    .i_select(ctrl_wb_sel_s1),
+    .i_data  ({{32{1'bX}}, imm_u_s1, alu_res_s1, {pc_inc_s1, 2'b0}}),
+    .o_data  (wb_dst_s1)
 );
+
+assign dst_s2 = (wb_sel_s2 == 2'b11) ? lsu_res_s2 : wb_dst_s2;
 
 endmodule
