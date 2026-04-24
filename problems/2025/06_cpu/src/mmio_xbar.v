@@ -7,35 +7,41 @@ module mmio_xbar (
     input  wire        i_mmio_wren,
     output reg  [31:0] o_mmio_data,
 
-    output reg  [15:0] o_hexd_data,
-    output reg   [1:0] o_hexd_mask,
+    output wire [15:0] o_hexd_data,
+    output wire  [1:0] o_hexd_mask,
     output reg         o_hexd_wren,
     input  wire [15:0] i_hexd_data
 );
 
-reg [9:0] mmio_addr_d;
+reg select, select_d;
+
+always @(*) begin
+    select = 1'bX;
+
+    if (i_mmio_addr == 10'h8) begin
+        select = 1'b0;
+    end
+end
 
 always @(posedge clk) begin
-    mmio_addr_d <= i_mmio_addr;
+    select_d <= select;
 end
 
 always @(*) begin
-    o_hexd_data = {16{1'bX}};
-    o_hexd_mask = {4{1'bX}};
     o_hexd_wren = 1'b0;
 
-
-    if (i_mmio_addr == 10'h8) begin
-        o_hexd_data = i_mmio_data[15:0];
-        o_hexd_mask = i_mmio_mask[1:0];
+    if (select == 0) begin
         o_hexd_wren = i_mmio_wren;
     end
 end
 
+assign o_hexd_data = i_mmio_data[15:0];
+assign o_hexd_mask = i_mmio_mask[1:0];
+
 always @(*) begin
     o_mmio_data = {32{1'bX}};
 
-    if (mmio_addr_d == 10'h8) begin
+    if (select_d == 0) begin
         o_mmio_data = {16'b0, i_hexd_data};
     end
 end
