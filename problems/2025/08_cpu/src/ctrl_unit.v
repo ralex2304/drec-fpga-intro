@@ -67,7 +67,7 @@ always @(*) begin
 
     if (opcode == OP_IMM && funct3 == 3'b000) begin // addi
         o_alu_oper[3] = 1'b0;
-    end else if (opcode == LOAD || opcode == STORE) begin
+    end else if (opcode == LOAD || opcode == STORE || opcode == AUIPC) begin
         o_alu_oper = 4'b0000;
     end
 end
