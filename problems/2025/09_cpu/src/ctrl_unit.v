@@ -31,10 +31,10 @@ localparam [1:0] IMM_I = 2'b10;
 localparam [1:0] SRC_1 = 2'b11;
 
 /// MUX WB
-localparam [1:0] WB_PCINC = 0;
-localparam [1:0] WB_ALU   = 1;
-localparam [1:0] WB_IMM_U = 2;
-localparam [1:0] WB_LSU   = 3;
+localparam [1:0] WB_PCINC = 2'b00;
+localparam [1:0] WB_ALU   = 2'b01;
+localparam [1:0] WB_IMM_U = 2'b10;
+localparam [1:0] WB_LSU   = 2'b11;
 
 /// Opcodes
 localparam [6:0] LOAD   = 7'b00000_11;
@@ -69,7 +69,7 @@ always @(*) begin
 
     if (opcode == OP_IMM && funct3 == 3'b000) begin // addi
         o_alu_oper[3] = 1'b0;
-    end else if (opcode == LOAD || opcode == STORE) begin
+    end else if (opcode == LOAD || opcode == STORE || opcode == AUIPC) begin
         o_alu_oper = 4'b0000;
     end
 end
